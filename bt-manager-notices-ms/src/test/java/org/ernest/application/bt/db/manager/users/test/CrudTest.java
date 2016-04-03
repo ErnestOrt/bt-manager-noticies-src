@@ -1,5 +1,7 @@
 package org.ernest.application.bt.db.manager.users.test;
 
+import org.ernest.applications.bt.db.manager.notices.ct.CreateNoticeInput;
+import org.ernest.applications.bt.db.manager.notices.ct.entries.Notice;
 import org.ernest.applications.bt.db.manager.notices.ms.Application;
 import org.junit.Assert;
 import org.junit.Test;
@@ -20,10 +22,12 @@ public class CrudTest {
 	
 	@Test
 	public void updateUserName(){
-		
-		String content = "content";
-		String id = new RestTemplate().postForObject("http://localhost:"+port+"/create", content, String.class);
-		Assert.assertEquals(content, new RestTemplate().getForObject("http://localhost:"+port+"/retrieve/"+id, String.class));
+		CreateNoticeInput input = new CreateNoticeInput();
+		input.setTitle("title");
+		input.setContent("content");
+
+		String id = new RestTemplate().postForObject("http://localhost:"+port+"/create", input, String.class);
+		Assert.assertEquals(input.getContent(), new RestTemplate().getForObject("http://localhost:"+port+"/retrieve/"+id, Notice.class).getContent());
 		new RestTemplate().getForObject("http://localhost:"+port+"/delete/"+id, String.class);	
 	}
 }

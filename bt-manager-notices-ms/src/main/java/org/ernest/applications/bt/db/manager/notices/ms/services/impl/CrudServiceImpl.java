@@ -1,11 +1,13 @@
 package org.ernest.applications.bt.db.manager.notices.ms.services.impl;
 
+import java.util.Date;
 import java.util.UUID;
 
+import org.ernest.applications.bt.db.manager.notices.ct.CreateNoticeInput;
+import org.ernest.applications.bt.db.manager.notices.ct.entries.Notice;
 import org.ernest.applications.bt.db.manager.notices.ct.exceptions.CreateNoticeException;
 import org.ernest.applications.bt.db.manager.notices.ct.exceptions.DeleteNoticeException;
 import org.ernest.applications.bt.db.manager.notices.ct.exceptions.RetrieveNoticeException;
-import org.ernest.applications.bt.db.manager.notices.ms.entities.Notice;
 import org.ernest.applications.bt.db.manager.notices.ms.services.CrudService;
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.CouchDbProperties;
@@ -22,10 +24,12 @@ public class CrudServiceImpl implements CrudService{
 	private String dbHost;
 
 	@Override
-	public String create(String content) throws CreateNoticeException {
+	public String create(CreateNoticeInput input) throws CreateNoticeException {
 		Notice notice = new Notice();
 		notice.set_id(UUID.randomUUID().toString());
-		notice.setContent(content);
+		notice.setTitle(input.getTitle());
+		notice.setContent(input.getContent());
+		notice.setDate(new Date());
 		try{
 			CouchDbClient dbClient = new CouchDbClient(buildCouchDbProperties());
 			dbClient.save(notice);
@@ -39,14 +43,14 @@ public class CrudServiceImpl implements CrudService{
 	}
 
 	@Override
-	public String retrieve(String noticeId) throws RetrieveNoticeException {
+	public Notice retrieve(String noticeId) throws RetrieveNoticeException {
 		
 		try{
 			CouchDbClient dbClient = new CouchDbClient(buildCouchDbProperties());
 			Notice notice = dbClient.find(Notice.class, noticeId);
 			dbClient.shutdown();
 			
-			return notice.getContent();
+			return notice;
 			
 		}catch(Exception e){
 			e.printStackTrace();

@@ -1,5 +1,7 @@
 package org.ernest.applications.bt.db.manager.notices.ms.controllers;
 
+import org.ernest.applications.bt.db.manager.notices.ct.CreateNoticeInput;
+import org.ernest.applications.bt.db.manager.notices.ct.entries.Notice;
 import org.ernest.applications.bt.db.manager.notices.ct.exceptions.CreateNoticeException;
 import org.ernest.applications.bt.db.manager.notices.ct.exceptions.DeleteNoticeException;
 import org.ernest.applications.bt.db.manager.notices.ct.exceptions.RetrieveNoticeException;
@@ -18,12 +20,12 @@ public class CrdController {
 	CrudService crudService;
 	
 	@RequestMapping("/create")
-	public String create(@RequestBody String content) throws CreateNoticeException {
-		return crudService.create(content);
+	public String create(@RequestBody CreateNoticeInput input) throws CreateNoticeException {
+		return crudService.create(input);
 	}
 	
 	@RequestMapping(path = "/retrieve/{noticeId}", method = RequestMethod.GET)
-	public String retrieve(@PathVariable("noticeId") String noticeId) throws RetrieveNoticeException {
+	public Notice retrieve(@PathVariable("noticeId") String noticeId) throws RetrieveNoticeException {
 		return crudService.retrieve(noticeId);
 	}
 	
